@@ -1,6 +1,7 @@
-import 'package:api/api.dart';
-import 'package:api/model.dart';
+import 'package:api/controller/api.dart';
+import 'package:api/model/model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
 class AddingPAge extends StatelessWidget {
   TextEditingController title = TextEditingController();
@@ -51,7 +52,7 @@ class AddingPAge extends StatelessWidget {
   
   void addData(BuildContext context) {
    final data = TodoModel(title: title.text, subtitle: subtitle.text);
-    postData(data);
+   Provider.of<ApiProvider>(context,listen: false).postData(data);
         Navigator.pop(context);
   }
 }

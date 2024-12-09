@@ -1,6 +1,7 @@
-import 'package:api/api.dart';
-import 'package:api/model.dart';
+import 'package:api/controller/api.dart';
+import 'package:api/model/model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
 class editPage extends StatelessWidget {
   String? id;
@@ -55,7 +56,7 @@ class editPage extends StatelessWidget {
 
   void editDatabtn(BuildContext context) {
     final data = TodoModel(title: title.text, subtitle: subtitle.text);
-      editData(id: id!, todoData: data);
+     Provider.of<ApiProvider>(context,listen: false).editData(id: id!, todoData: data);
       Navigator.pop(context);
   }
 }

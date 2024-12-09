@@ -1,8 +1,8 @@
-import 'package:api/add.dart';
-import 'package:api/api.dart';
-import 'package:api/edit.dart';
-import 'package:api/model.dart';
-import 'package:api/view.dart';
+import 'package:api/view/add.dart';
+import 'package:api/controller/api.dart';
+import 'package:api/view/edit.dart';
+import 'package:api/model/model.dart';
+import 'package:api/view/view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -68,7 +68,8 @@ class _HomePageState extends State<HomePage> {
                               icon: Icon(Icons.edit)),
                           IconButton(
                               onPressed: () {
-                                deleteData(todos[index].id!);
+                                Provider.of<ApiProvider>(context, listen: false)
+                                    .deleteData(todos[index].id!);
                               },
                               icon: Icon(Icons.delete)),
                         ],
