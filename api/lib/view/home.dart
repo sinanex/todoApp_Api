@@ -1,118 +1,79 @@
+import 'package:api/controller/provider.dart';
 import 'package:api/view/add.dart';
-import 'package:api/controller/api.dart';
 import 'package:api/view/edit.dart';
-import 'package:api/model/model.dart';
 import 'package:api/view/view.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  late Future<List<TodoModel>> todoData;
-
-  @override
-  void initState() {
-    super.initState();
-    todoData = getData();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    Provider.of<ProviderApi>(context).getTodo();
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: Text('Todo 💔'),
-      ),
-      child: Stack(
-        children: [
-          FutureBuilder<List<TodoModel>>(
-            future: todoData,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CupertinoActivityIndicator());
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Center(child: Text('No data available'));
-              } else {
-                List<TodoModel> todos = snapshot.data!;
-                return ListView.builder(
-                  itemCount: todos.length,
-                  itemBuilder: (context, index) {
-                    return CupertinoListTile(
-                      onTap: () {
-                        Provider.of<displayData>(context, listen: false)
-                            .display(todos[index].id);
-                        Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (context) => DetailsPage()));
-                      },
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => editPage(
-                                        id: todos[index].id,
-                                      ),
-                                    ));
-                              },
-                              icon: Icon(Icons.edit)),
-                          IconButton(
-                              onPressed: () {
-                                Provider.of<ApiProvider>(context, listen: false)
-                                    .deleteData(todos[index].id!);
-                              },
-                              icon: Icon(Icons.delete)),
-                        ],
-                      ),
-                      title: Text(todos[index].title ?? 'No Title'),
-                      subtitle: Text(todos[index].subtitle ?? 'No Subtitle'),
-                    );
-                  },
-                );
-              }
-            },
-          ),
-          Positioned(
-            bottom: 20,
-            right: 20,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddingPAge()),
-                );
-              },
-              child: Container(
-                height: 60,
-                width: 120,
-                decoration: BoxDecoration(
-                  color: CupertinoColors.systemBlue,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Center(
-                  child: Text(
-                    "ADD TODO",
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+        navigationBar: CupertinoNavigationBar(
+          trailing: CupertinoButton(
+              child: const Icon(CupertinoIcons.add),
+              onPressed: () {
+                Navigator.push(context,
+                    CupertinoPageRoute(builder: (context) => AddingPAge()));
+              }),
+          middle: const Text('Todo '),
+        ),
+        child: Consumer<ProviderApi>(builder: (context, value, child) {
+          if (value.todoData.isEmpty) {
+            return const Center(
+              child: Text(
+                "no data",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
                 ),
               ),
-            ),
-          ),
-        ],
-      ),
-    );
+            );
+          }
+          return ListView.builder(
+            itemCount: value.todoData.length,
+            itemBuilder: (context, index) {
+              return CupertinoListTile(
+                onTap: () {
+                  Provider.of<displayData>(context, listen: false)
+                      .display(value.todoData[index].id);
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => const DetailsPage()));
+                },
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CupertinoButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => editPage(
+                                  subtitlee: value.todoData[index].subtitle,
+                                  titlee: value.todoData[index].title,
+                                  id: value.todoData[index].id,
+                                ),
+                              ));
+                        },
+                        child: const Icon(CupertinoIcons.pencil)),
+                    CupertinoButton(
+                        onPressed: () {
+                          Provider.of<ProviderApi>(context, listen: false)
+                              .delete(value.todoData[index].id!);
+                        },
+                        child: const Icon(CupertinoIcons.delete)),
+                  ],
+                ),
+                title: Text(value.todoData[index].title ?? 'No Title'),
+                subtitle: Text(value.todoData[index].subtitle ?? 'No Subtitle'),
+              );
+            },
+          );
+        }));
   }
 }

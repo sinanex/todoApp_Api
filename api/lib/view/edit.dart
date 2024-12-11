@@ -1,15 +1,35 @@
-import 'package:api/controller/api.dart';
-import 'package:api/model/model.dart';
+import 'package:api/controller/provider.dart';
+import 'package:api/view/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
-class editPage extends StatelessWidget {
+// ignore: must_be_immutable, camel_case_types
+class editPage extends StatefulWidget {
   String? id;
+  String? titlee;
 
+  String? subtitlee;
+  editPage(
+      {super.key,
+      required this.id,
+      required this.subtitlee,
+      required this.titlee});
+
+  @override
+  State<editPage> createState() => _editPageState();
+}
+
+// ignore: camel_case_types
+class _editPageState extends State<editPage> {
   TextEditingController title = TextEditingController();
-  TextEditingController subtitle = TextEditingController();
 
-  editPage({super.key, required this.id});
+  TextEditingController subtitle = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    title = TextEditingController(text: widget.titlee);
+    subtitle = TextEditingController(text: widget.subtitlee);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +63,7 @@ class editPage extends StatelessWidget {
               ),
             ),
             CupertinoButton(
-              child: Text("submit"),
+              child: const Text("submit"),
               onPressed: () {
                 editDatabtn(context);
               },
@@ -55,8 +75,10 @@ class editPage extends StatelessWidget {
   }
 
   void editDatabtn(BuildContext context) {
-    final data = TodoModel(title: title.text, subtitle: subtitle.text);
-     Provider.of<ApiProvider>(context,listen: false).editData(id: id!, todoData: data);
-      Navigator.pop(context);
+    final titileData = title.text.trim();
+    final subtitileData = subtitle.text.trim();
+    Provider.of<ProviderApi>(context, listen: false)
+        .update(id: widget.id!, title: titileData, subtile: subtitileData);
+     Navigator.pop(context);
   }
 }

@@ -1,6 +1,6 @@
 
+import 'package:api/controller/provider.dart';
 
-import 'package:api/controller/api.dart';
 import 'package:api/view/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -19,11 +19,12 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
     ChangeNotifierProvider(create: (context) => displayData(),),
-    ChangeNotifierProvider(create: (context) => ApiProvider(),),
+    ChangeNotifierProvider(create: (context) => ProviderApi(),),
+    // ChangeNotifierProvider(create: (context) => providerFetch(),),
       ],
       child: const CupertinoApp(
         debugShowCheckedModeBanner: false,
-        theme: CupertinoThemeData(
+        theme:  CupertinoThemeData(
           brightness: Brightness.light,
         ),
         home: HomePage(),

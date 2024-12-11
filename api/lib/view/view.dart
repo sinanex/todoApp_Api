@@ -1,4 +1,5 @@
-import 'package:api/controller/api.dart';
+
+import 'package:api/controller/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +14,7 @@ class DetailsPage extends StatelessWidget {
     final subtitle = prov.subtitle ?? 'No Subtitle Available';
 
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
+      navigationBar: const CupertinoNavigationBar(
         middle: Text("view page "),
       ),
       child: SafeArea(
@@ -22,17 +23,17 @@ class DetailsPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Title",style:TextStyle(
+              const Text("Title",style:TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
               ),), 
-              Text("$title"),
-              SizedBox(height: 20,),
-              Text("subtitle",style: TextStyle(
+              Text(title),
+              const SizedBox(height: 20,),
+              const Text("subtitle",style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20
               ),), 
-              Text("$subtitle"),
+              Text(subtitle),
             ],
           ),
         ),
